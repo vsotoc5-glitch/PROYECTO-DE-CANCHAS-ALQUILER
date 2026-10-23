@@ -1,0 +1,62 @@
+
+package com.programador.complejodeportivola10;
+
+import java.time.LocalDate;
+
+
+
+public class Cliente {
+    
+   private String codigo,  nombre,  telefono,  correoElectronico;
+   private LocalDate fechaRegistro;
+    
+    
+    public Cliente (String codigo, String nombre, String telefono, String correoElectronico, LocalDate fechaRegistro){
+    this.codigo = codigo;
+    this.nombre = nombre;
+    this.telefono = telefono;
+    this.correoElectronico = correoElectronico;
+    this.fechaRegistro=fechaRegistro != null? fechaRegistro : LocalDate.now();
+        
+    }
+     public Cliente(String codigo, String nombre, String telefono) {
+         this(codigo, nombre, telefono, null, LocalDate.now());
+       
+     }
+     
+    public String getcodigo(){
+       return codigo; 
+    }
+    public void setcodigo(String codigo){
+        this.codigo=codigo;
+    }
+    
+    public String getnombre(){
+        return nombre;
+    }
+    public void setnombre(String nombre){
+        this.nombre=nombre;
+        
+    }
+    public String gettelefono(){
+        return telefono;
+    }
+    public void settelefono(String telefono){
+        this.telefono=telefono;
+        
+    }
+     public String getcorreoElectronico(){
+        return correoElectronico;
+    }  
+     public void setcorreoElectronico(String correoElectronico){
+        this.correoElectronico=correoElectronico;
+     }
+     
+     public LocalDate getfechaRegistro(){
+         return fechaRegistro;
+     }
+     public void setfechaRegistro(LocalDate fechaRegistro){
+         this.fechaRegistro=fechaRegistro;
+     }
+     
+}     
