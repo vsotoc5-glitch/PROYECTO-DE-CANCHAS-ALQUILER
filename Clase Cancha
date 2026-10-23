@@ -1,0 +1,87 @@
+
+package com.programador.complejodeportivola10;
+
+import java.time.LocalTime;
+
+public class Cancha {
+   
+        public enum EstadoCancha{
+            DISPONIBLE, MANTENIMIENTO, INACTIVA
+            
+        }
+    
+        private String codigo, nombre, tipo;
+        private int capacidad;
+        private double precioBase;
+        private EstadoCancha estado;
+        private LocalTime HoraApertura;
+        private LocalTime HoraCierre;
+        
+        public Cancha(String codigo, String nombre, String tipo, int capacidad, double precioBase, EstadoCancha estado, LocalTime HoraApertura, LocalTime HoraCierre){
+            this.codigo= codigo;
+            this.nombre= nombre;
+            this.tipo= tipo;
+            this.capacidad = capacidad;
+            this.precioBase = precioBase;
+            this.estado = estado != null? estado: EstadoCancha.DISPONIBLE;
+            this.HoraApertura=HoraApertura;
+            this.HoraCierre=HoraCierre;               
+}
+        public String getcodigo(){
+            return codigo;    
+        }
+        public void setcodigo(String codigo){
+            this.codigo=codigo;
+        }
+        
+         public String getnombre(){
+            return nombre; 
+         }
+         public void setnombre(String nombre){
+             this.nombre=nombre;
+         }
+         
+          public String getipo(){
+            return tipo; 
+          }
+          public void setipo(String tipo){
+              this.tipo=tipo;
+          }
+          
+           public int getcapacidad(){
+            return capacidad;
+           }
+           public void setcapacidad(int capacidad){
+               this.capacidad=capacidad;
+           }
+           
+            public double getprecioBase(){
+            return precioBase; 
+            }
+            public void setprecioBase(double precioBase){
+                this.precioBase=precioBase;
+            }
+            
+             public EstadoCancha getestado(){
+            return estado; 
+             }
+             public void setestado(EstadoCancha estado){
+                 this.estado=estado;
+             }
+             
+              public LocalTime getHoraApertura(){
+            return HoraApertura;
+            
+              }
+              public void setHoraApertura(LocalTime HoraApertura){
+                  this.HoraApertura=HoraApertura;
+              }
+              public LocalTime getHoraCierre(){
+                  return HoraCierre;
+              }
+              public void setHoraCierre(LocalTime HoraCierre){
+                  this.HoraCierre=HoraCierre;
+              }
+           
+
+}
