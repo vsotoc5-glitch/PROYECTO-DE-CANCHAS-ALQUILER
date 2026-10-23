@@ -1,0 +1,111 @@
+
+package com.programador.complejodeportivola10;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class Reserva {
+    public enum EstadoReserva {
+    PENDIENTE, CONFIRMADA, EN_CURSO, FINALIZADA, CANCELADA
+}
+ 
+
+    private String codigoReserva;
+    private Cliente cliente;
+    private Cancha cancha;
+    private LocalDate fecha;
+    private LocalTime horaInicio;
+    private LocalTime horaFin;
+    private EstadoReserva estado;
+    
+    // Arreglos tradicionales en lugar de ArrayList
+    private ServicioAdicional[] serviciosAdicionales;
+    private int totalServicios;
+    private Pago[] pagos;
+    private int totalPagos;
+    private double totalReserva;
+
+    private static final int MAX_SERVICIOS = 10;
+    private static final int MAX_PAGOS = 10;
+
+    public Reserva(String codigoReserva, Cliente cliente, Cancha cancha, LocalDate fecha, LocalTime horaInicio, int duracionHoras) {
+        this.codigoReserva = codigoReserva;
+        this.cliente = cliente;
+        this.cancha = cancha;
+        this.fecha = fecha;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaInicio.plusHours(duracionHoras);
+        this.estado = EstadoReserva.PENDIENTE;
+        
+        this.serviciosAdicionales = new ServicioAdicional[MAX_SERVICIOS];
+        this.totalServicios = 0;
+        this.pagos = new Pago[MAX_PAGOS];
+        this.totalPagos = 0;
+        
+        calcularTotal(duracionHoras);
+    }
+
+    private void calcularTotal(int duracionHoras) {
+        double subtotalCancha = cancha.getprecioBase() * duracionHoras;
+        double subtotalServicios = 0;
+        for (int i = 0; i < totalServicios; i++) {
+            subtotalServicios += serviciosAdicionales[i].getPrecio();
+        }
+        this.totalReserva = subtotalCancha + subtotalServicios;
+    }
+
+    public void agregarServicio(ServicioAdicional servicio) {
+        if (totalServicios >= MAX_SERVICIOS) {
+            throw new IllegalStateException("Límite de servicios adicionales alcanzado.");
+        }
+        this.serviciosAdicionales[totalServicios++] = servicio;
+        long duracion = Duration.between(horaInicio, horaFin).toHours();
+        calcularTotal((int) duracion);
+    }
+
+    public void registrarPago(Pago pago) {
+        double saldoPendiente = calcularSaldoPendiente();
+        if (pago.getMonto() > saldoPendiente) {
+            throw new IllegalArgumentException("El pago excede el saldo pendiente.");
+        }
+        if (totalPagos >= MAX_PAGOS) {
+            throw new IllegalStateException("Límite de pagos alcanzado.");
+        }
+        this.pagos[totalPagos++] = pago;
+        
+        if (calcularSaldoPendiente() == 0) {
+            this.estado = EstadoReserva.CONFIRMADA;
+        }
+    }
+
+    public double getTotalPagado() {
+        double suma = 0;
+        for (int i = 0; i < totalPagos; i++) {
+            suma += pagos[i].getMonto();
+        }
+        return suma;
+    }
+
+    public double calcularSaldoPendiente() {
+        return this.totalReserva - getTotalPagado();
+    }
+
+    // Regla de traslape obligatoria: inicioNuevo < finExistente Y finNuevo > inicioExistente[cite: 14]
+    public boolean seTraslapaCon(LocalDate otraFecha, LocalTime otroInicio, LocalTime otroFin, Cancha otraCancha) {
+        if (!this.cancha.equals(otraCancha) || !this.fecha.equals(otraFecha)) {
+            return false;
+        }
+        if (this.estado == EstadoReserva.CANCELADA) {
+            return false;
+        }
+        return otroInicio.isBefore(this.horaFin) && otroFin.isAfter(this.horaInicio);
+    }
+
+    public EstadoReserva getEstado() { return estado; }
+    public LocalDate getFecha() { return fecha; }
+    public LocalTime getHoraInicio() { return horaInicio; }
+    public LocalTime getHoraFin() { return horaFin; }
+    public Cancha getCancha() { return cancha; }
+}
+    
